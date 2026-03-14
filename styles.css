@@ -6,9 +6,9 @@
 }
 
 :root {
-    --primary-dark: #0A5C4A;
-    --primary-light: #5CB85C;
-    --primary-gradient: linear-gradient(135deg, #0A5C4A 0%, #5CB85C 100%);
+    --primary-dark: #0071BC;
+    --primary-light: #29ABE2;
+    --primary-gradient: linear-gradient(135deg, #0071BC 0%, #29ABE2 100%);
     --text-dark: #1a1a1a;
     --text-light: #666666;
     --text-lighter: #999999;

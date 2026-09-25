@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://luigiai.dev/sitemap.xml

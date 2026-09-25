@@ -3,318 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luigi AI - AI Consulting for Your Business</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Luigi AI — Practical AI consulting for your business</title>
+    <meta name="description" content="Luigi AI helps small and mid-size businesses understand what AI can do for them, build a practical roadmap, and implement the right tools. Book a free 30-minute intro call.">
+    <meta name="theme-color" content="#0071BC">
+    <link rel="canonical" href="https://luigiai.dev/">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="static/Luigi AI Logo.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Luigi AI">
+    <meta property="og:title" content="Luigi AI — Practical AI consulting for your business">
+    <meta property="og:description" content="Understand what AI can do for your business, get a clear roadmap, and implement with confidence. Book a free 30-minute intro call.">
+    <meta property="og:url" content="https://luigiai.dev/">
+    <meta property="og:image" content="https://luigiai.dev/static/Luigi%20AI%20Logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Luigi AI — Practical AI consulting for your business">
+    <meta name="twitter:description" content="Understand what AI can do for your business, get a clear roadmap, and implement with confidence.">
+    <meta name="twitter:image" content="https://luigiai.dev/static/Luigi%20AI%20Logo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Luigi AI",
+      "url": "https://luigiai.dev/",
+      "logo": "https://luigiai.dev/static/Luigi%20AI%20Logo.png",
+      "description": "AI consulting for small and mid-size businesses: discovery, strategy, implementation guidance, and team training.",
+      "email": "alahiji@gmail.com",
+      "areaServed": "Worldwide",
+      "serviceType": ["AI consulting", "AI strategy", "Process automation", "AI training"]
+    }
+    </script>
 </head>
-<body class="home-page">
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <img src="static/Luigi AI Logo.png" alt="Luigi AI Logo">
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#consultation" class="btn-primary">Get Consultation</a></li>
-                </ul>
-                <button class="mobile-menu-toggle" aria-label="Toggle menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Header / Navigation -->
+    <header class="site-header" id="top">
+        <div class="container nav-bar">
+            <a href="#top" class="brand" aria-label="Luigi AI home">
+                <img src="static/Luigi AI Logo.png" alt="Luigi AI" width="3055" height="1390">
+            </a>
+
+            <nav class="nav-desktop" aria-label="Primary">
+                <a href="#services">Services</a>
+                <a href="#process">How it works</a>
+                <a href="#about">About</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="#book" class="btn btn-primary btn-sm">Book a call</a>
+                <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
                 </button>
             </div>
         </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Transform Your Business with <span class="gradient-text">AI Solutions</span></h1>
-                <p class="hero-subtitle">Expert AI consulting to help you understand and implement artificial intelligence in your company</p>
-                <div class="hero-buttons">
-                    <a href="#consultation" class="btn-primary btn-large">Schedule Consultation</a>
-                    <a href="#services" class="btn-secondary btn-large">Learn More</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="floating-card card-1">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg>
-                    <span>AI Strategy</span>
-                </div>
-                <div class="floating-card card-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                    </svg>
-                    <span>Automation</span>
-                </div>
-                <div class="floating-card card-3">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                    </svg>
-                    <span>Analytics</span>
-                </div>
-            </div>
-        </div>
-    </section>
+        <nav class="nav-mobile" id="mobileNav" aria-label="Mobile" hidden>
+            <a href="#services">Services</a>
+            <a href="#process">How it works</a>
+            <a href="#about">About</a>
+            <a href="#faq">FAQ</a>
+            <a href="#book" class="btn btn-primary btn-block">Book a free intro call</a>
+        </nav>
+    </header>
 
-    <!-- Services Section -->
-    <section id="services" class="services">
-        <div class="container">
-            <div class="section-header">
-                <h2>How We Can Help</h2>
-                <p>Comprehensive AI consulting services tailored to your business needs</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                        </svg>
+    <main id="main">
+        <!-- Hero -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-bg" aria-hidden="true"></div>
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <p class="eyebrow"><span class="eyebrow-dot"></span>AI consulting for growing businesses</p>
+                    <h1 id="hero-title" class="hero-title">Put AI to work <span class="text-gradient">in your business.</span></h1>
+                    <p class="hero-lead">We help small and mid-size companies understand what AI can (and can't) do for them, build a practical roadmap, and implement the right tools with confidence.</p>
+                    <div class="hero-actions">
+                        <a href="#book" class="btn btn-primary btn-lg">Book a free intro call</a>
+                        <a href="#services" class="btn btn-ghost btn-lg">Explore services</a>
                     </div>
-                    <h3>AI Discovery</h3>
-                    <p>Understand what AI can do for your specific industry and business model. We'll identify opportunities and use cases.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Strategy Development</h3>
-                    <p>Create a customized AI roadmap aligned with your business goals, budget, and timeline.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3>Implementation Guidance</h3>
-                    <p>Get expert advice on choosing and implementing the right AI tools and platforms for your needs.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <h3>Team Training</h3>
-                    <p>Educate your team on AI fundamentals, best practices, and how to leverage AI in their daily work.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="16 18 22 12 16 6"></polyline>
-                            <polyline points="8 6 2 12 8 18"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Process Automation</h3>
-                    <p>Identify repetitive tasks and workflows that can be automated with AI to save time and reduce costs.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3>ROI Analysis</h3>
-                    <p>Measure the potential return on investment for AI initiatives and track success metrics.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>About Luigi AI</h2>
-                    <p class="lead">We help businesses navigate the rapidly evolving world of artificial intelligence.</p>
-                    <p>At Luigi AI, we believe that AI should be accessible to businesses of all sizes. Our mission is to demystify artificial intelligence and help you understand how it can transform your operations, improve efficiency, and drive growth.</p>
-                    <p>Whether you're just starting to explore AI or looking to expand your existing capabilities, we provide personalized consultations that focus on your unique challenges and opportunities.</p>
-                    <div class="stats">
-                        <div class="stat">
-                            <div class="stat-number">100+</div>
-                            <div class="stat-label">AI Use Cases</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number">50+</div>
-                            <div class="stat-label">Industries Served</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-number">95%</div>
-                            <div class="stat-label">Client Satisfaction</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-image">
-                    <div class="image-placeholder">
-                        <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                            <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
-                            <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
-                            <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
-                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Consultation Form Section -->
-    <section id="consultation" class="consultation">
-        <div class="container">
-            <div class="consultation-content">
-                <div class="consultation-info">
-                    <h2>Request a Consultation</h2>
-                    <p class="lead">Let's discuss how AI can transform your business</p>
-                    <ul class="benefits-list">
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span>Free initial consultation (30 minutes)</span>
-                        </li>
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span>Personalized AI recommendations</span>
-                        </li>
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span>No obligation or commitment required</span>
-                        </li>
-                        <li>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span>Flexible scheduling options</span>
-                        </li>
+                    <ul class="hero-trust" aria-label="What to expect">
+                        <li>30 minutes</li>
+                        <li>Free</li>
+                        <li>No commitment</li>
                     </ul>
                 </div>
-                <div class="consultation-form-wrapper">
-                    <form id="consultationForm" class="consultation-form">
-                        <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" required>
+
+                <div class="hero-card" id="heroCard" data-reveal>
+                    <div class="hero-card-head">
+                        <div>
+                            <p class="hero-card-kicker">Next available</p>
+                            <p class="hero-card-title" data-meeting-label>Free intro call</p>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="company">Company Name</label>
-                            <input type="text" id="company" name="company">
-                        </div>
-                        <div class="form-group">
-                            <label for="industry">Industry</label>
-                            <select id="industry" name="industry">
-                                <option value="">Select your industry</option>
-                                <option value="technology">Technology</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="finance">Finance</option>
-                                <option value="retail">Retail</option>
-                                <option value="manufacturing">Manufacturing</option>
-                                <option value="education">Education</option>
-                                <option value="real-estate">Real Estate</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="interest">What are you interested in? *</label>
-                            <select id="interest" name="interest" required>
-                                <option value="">Select an option</option>
-                                <option value="learning">Learning about AI basics</option>
-                                <option value="strategy">Developing an AI strategy</option>
-                                <option value="implementation">Implementing AI tools</option>
-                                <option value="automation">Process automation</option>
-                                <option value="training">Team training</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Tell us about your needs</label>
-                            <textarea id="message" name="message" rows="4" placeholder="Describe your business challenges and what you hope to achieve with AI..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary btn-large btn-full">Request Consultation</button>
-                    </form>
-                    <div id="formSuccess" class="form-success" style="display: none;">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                        <h3>Thank you for your request!</h3>
-                        <p>We'll get back to you within 24 hours to schedule your consultation.</p>
+                        <span class="pill pill-live"><span class="pill-dot"></span>Open</span>
                     </div>
+                    <ul class="hero-slots" id="heroSlots" aria-label="Next available times">
+                        <li class="hero-slot-skeleton"></li>
+                        <li class="hero-slot-skeleton"></li>
+                        <li class="hero-slot-skeleton"></li>
+                    </ul>
+                    <p class="hero-card-foot">
+                        <span data-hero-tz>Times in your local time zone</span>
+                        <a href="#book">See all times →</a>
+                    </p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Services -->
+        <section id="services" class="section" aria-labelledby="services-title">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Services</p>
+                    <h2 id="services-title">Everything you need to go from "curious" to "in production"</h2>
+                    <p class="section-lead">Clear, vendor-neutral guidance at every stage, tailored to your industry and your budget.</p>
+                </div>
+
+                <div class="grid grid-3">
+                    <article class="card service" data-reveal>
+                        <div class="service-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v3l2 2"/></svg>
+                        </div>
+                        <h3>AI Discovery</h3>
+                        <p>Find out what AI can realistically do for your specific business model. We identify high-value use cases and quick wins.</p>
+                    </article>
+
+                    <article class="card service" data-reveal>
+                        <div class="service-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5"/><path d="M8 13h8M8 17h5"/></svg>
+                        </div>
+                        <h3>Strategy &amp; Roadmap</h3>
+                        <p>A prioritized, plain-language AI plan aligned with your goals, timeline, and budget, so everyone knows what happens next.</p>
+                    </article>
+
+                    <article class="card service" data-reveal>
+                        <div class="service-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="4"/><path d="m6.3 6.3 2.1 2.1M15.6 15.6l2.1 2.1M6.3 17.7l2.1-2.1M15.6 8.4l2.1-2.1"/></svg>
+                        </div>
+                        <h3>Implementation Guidance</h3>
+                        <p>Choose and roll out the right tools and platforms. We help you evaluate vendors, avoid lock-in, and launch safely.</p>
+                    </article>
+
+                    <article class="card service" data-reveal>
+                        <div class="service-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h3>Team Training</h3>
+                        <p>Hands-on workshops that teach your team AI fundamentals, safe usage, and how to apply it in their day-to-day work.</p>
+                    </article>
+
+                    <article class="card service" data-reveal>
+                        <div class="service-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h6l2 3h8v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7Z"/><path d="M9 14h6M12 11v6"/></svg>
+                        </div>
+                        <h3>Process Automation</h3>
+                        <p>Spot the repetitive work that AI can take off your plate, then design automations that save hours every week.</p>
+                    </article>
+
+                    <article class="card service" data-reveal>
+                        <div class="service-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg>
+                        </div>
+                        <h3>ROI Analysis</h3>
+                        <p>Estimate the return on every AI initiative before you commit, and track the metrics that prove it's working.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process -->
+        <section id="process" class="section section-alt" aria-labelledby="process-title">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">How it works</p>
+                    <h2 id="process-title">A simple path from first call to results</h2>
+                    <p class="section-lead">No jargon, no 80-page decks. Just a clear plan and the support to execute it.</p>
+                </div>
+
+                <ol class="steps">
+                    <li class="step" data-reveal>
+                        <span class="step-num">1</span>
+                        <h3>Book a free intro call</h3>
+                        <p>Pick a time that suits you. We'll talk through your goals, your current tools, and where AI might help.</p>
+                    </li>
+                    <li class="step" data-reveal>
+                        <span class="step-num">2</span>
+                        <h3>Get a clear roadmap</h3>
+                        <p>You receive a prioritized plan: use cases, recommended tools, rough costs, and the expected return, in plain language.</p>
+                    </li>
+                    <li class="step" data-reveal>
+                        <span class="step-num">3</span>
+                        <h3>Implement with support</h3>
+                        <p>Hands-on guidance and team training so the plan actually ships, and keeps delivering after we're done.</p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="about" class="section" aria-labelledby="about-title">
+            <div class="container about-grid">
+                <div class="about-copy">
+                    <p class="eyebrow">About</p>
+                    <h2 id="about-title">AI should be accessible to businesses of every size</h2>
+                    <p class="lead">Luigi AI exists to demystify artificial intelligence and help you see how it can transform your operations, improve efficiency, and drive growth.</p>
+                    <p>Whether you're just starting to explore AI or looking to expand what you already have, every engagement is personalized to your unique challenges and opportunities. No boilerplate, no vendor agenda.</p>
+                    <a href="#book" class="btn btn-primary">Start with a free call</a>
+                </div>
+
+                <ul class="pillars" aria-label="What makes Luigi AI different">
+                    <li class="pillar" data-reveal>
+                        <div class="pillar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M12 7v5l3 3"/><path d="M21 3v5h-5"/></svg>
+                        </div>
+                        <h3>Plain language</h3>
+                        <p>Every recommendation explained so your whole team can act on it, not just the engineers.</p>
+                    </li>
+                    <li class="pillar" data-reveal>
+                        <div class="pillar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                        </div>
+                        <h3>Vendor-neutral</h3>
+                        <p>We don't resell software. You get the tool that fits, whether it's a $20 subscription or a custom build.</p>
+                    </li>
+                    <li class="pillar" data-reveal>
+                        <div class="pillar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>
+                        </div>
+                        <h3>Built for real businesses</h3>
+                        <p>Practical advice sized to your budget and your team, from a first automation to a company-wide rollout.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Booking -->
+        <section id="book" class="section section-alt booking" aria-labelledby="book-title">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Schedule a consultation</p>
+                    <h2 id="book-title">Pick a time that works for you</h2>
+                    <p class="section-lead">Every intro call is free, <span data-duration>30</span> minutes, and held over video. Choose a slot below and we'll take it from there.</p>
+                </div>
+
+                <div class="booking-shell card" id="bookingShell">
+                    <!-- Populated by scheduler.js -->
+                    <noscript>
+                        <p class="booking-noscript">Our scheduler needs JavaScript. You can also email us directly at <a href="mailto:alahiji@gmail.com">alahiji@gmail.com</a> with a couple of times that suit you.</p>
+                    </noscript>
+                </div>
+
+                <p class="booking-alt">Prefer email? Write to <a data-contact-link href="mailto:alahiji@gmail.com">alahiji@gmail.com</a> with a few times that suit you.</p>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="section" aria-labelledby="faq-title">
+            <div class="container faq-grid">
+                <div class="faq-intro">
+                    <p class="eyebrow">FAQ</p>
+                    <h2 id="faq-title">Common questions</h2>
+                    <p class="section-lead">Still wondering about something? <a href="#book">Book a call</a> and ask us directly.</p>
+                </div>
+
+                <div class="faq-list">
+                    <details class="faq-item" open>
+                        <summary>What happens on the intro call?</summary>
+                        <div class="faq-body"><p>We spend about 30 minutes learning about your business, your current tools, and what you hope AI could do for you. You'll leave with two or three concrete ideas and an honest view of whether it's worth going further.</p></div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How much does it cost?</summary>
+                        <div class="faq-body"><p>The intro call is free with no obligation. If we continue, we'll agree on a fixed-price engagement up front, from a single discovery session to ongoing advisory.</p></div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Do I need a technical background?</summary>
+                        <div class="faq-body"><p>Not at all. Most of our clients are business owners and operators. We translate the technical details into decisions you can make.</p></div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Are consultations remote?</summary>
+                        <div class="faq-body"><p>Yes. Calls are held over video, so we can work with you wherever you are. On-site workshops can be arranged for training engagements.</p></div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How should I prepare?</summary>
+                        <div class="faq-body"><p>Come with one or two problems that eat up your team's time, and a rough sense of your budget. That's enough for a productive first conversation.</p></div>
+                    </details>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <img src="static/Luigi AI Logo.png" alt="Luigi AI Logo" class="footer-logo">
-                    <p>Empowering businesses with AI knowledge and strategy.</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4>Services</h4>
-                        <ul>
-                            <li><a href="#services">AI Discovery</a></li>
-                            <li><a href="#services">Strategy Development</a></li>
-                            <li><a href="#services">Implementation</a></li>
-                            <li><a href="#services">Training</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Company</h4>
-                        <ul>
-                            <li><a href="#about">About Us</a></li>
-                            <li><a href="#consultation">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <img src="static/Luigi AI Logo.png" alt="Luigi AI" class="footer-logo" width="3055" height="1390">
+                <p>Helping businesses understand and apply AI with clarity.</p>
+                <a data-contact-link href="mailto:alahiji@gmail.com" class="footer-email">alahiji@gmail.com</a>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Luigi AI. All rights reserved.</p>
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#services">AI Discovery</a></li>
+                    <li><a href="#services">Strategy &amp; Roadmap</a></li>
+                    <li><a href="#services">Implementation</a></li>
+                    <li><a href="#services">Team Training</a></li>
+                </ul>
             </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#process">How it works</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#book">Book a call</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>&copy; <span data-year>2026</span> Luigi AI. All rights reserved.</p>
+            <a href="#top" class="back-to-top">Back to top ↑</a>
         </div>
     </footer>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="config.js"></script>
+    <script src="scheduler.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

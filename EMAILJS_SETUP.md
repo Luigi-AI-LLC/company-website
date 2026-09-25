@@ -1,137 +1,97 @@
-# EmailJS Setup Instructions
+# EmailJS setup (optional)
 
-This guide will help you configure EmailJS to send consultation form submissions to **alahiji@gmail.com**.
+EmailJS is one of three ways the built-in scheduler can deliver consultation
+requests to **alahiji@gmail.com**. Formspree is simpler (see `SCHEDULING.md`);
+use EmailJS if you prefer it or already have an account.
 
-## Step 1: Create an EmailJS Account
+## 1. Create an account and connect Gmail
 
-1. Go to [https://www.emailjs.com/](https://www.emailjs.com/)
-2. Click "Sign Up" and create a free account
-3. Verify your email address
+1. Sign up at https://www.emailjs.com/ and verify your email.
+2. *Email Services* → *Add New Service* → **Gmail** → connect
+   `alahiji@gmail.com`.
+3. Copy the **Service ID** (e.g. `service_abc123`).
 
-## Step 2: Add an Email Service
+## 2. Create the template
 
-1. Go to the [Email Services](https://dashboard.emailjs.com/admin) page in your EmailJS dashboard
-2. Click "Add New Service"
-3. Choose **Gmail** as your email service
-4. Click "Connect Account" and authorize EmailJS to use your Gmail account (alahiji@gmail.com)
-5. Once connected, you'll see a **Service ID** (e.g., `service_abc123`) - **copy this ID**
+*Email Templates* → *Create New Template*:
 
-## Step 3: Create an Email Template
+- **Subject:** `Consultation request: {{from_name}} — {{slot_owner_time}}`
+- **To email:** `{{to_email}}`
+- **Reply to:** `{{reply_to}}`
+- **Body:**
 
-1. Go to the [Email Templates](https://dashboard.emailjs.com/admin/templates) page
-2. Click "Create New Template"
-3. Use the following template configuration:
-
-### Template Settings:
-- **Template Name**: Luigi AI Consultation Request
-- **Subject**: New Consultation Request from {{from_name}}
-
-### Email Content (Body):
 ```
-You have received a new consultation request from your Luigi AI website.
+New consultation request from luigiai.dev
 
-Client Details:
---------------
-Name: {{from_name}}
-Email: {{from_email}}
-Company: {{company}}
-Industry: {{industry}}
+Name:     {{from_name}}
+Email:    {{from_email}}
+Company:  {{company}}
+Topic:    {{interest}}
 
-Interest:
----------
-{{interest}}
+Requested time
+  Your time zone:    {{slot_owner_time}}
+  Visitor time zone: {{slot_visitor_time}} ({{visitor_timezone}})
+  Duration:          {{duration_minutes}} minutes
+  Slot ID (UTC):     {{slot_start_utc}}
 
-Message:
---------
+Notes
+{{notes}}
+
+---
+Full message:
 {{message}}
-
----
-This email was sent from the Luigi AI consultation form.
-Reply directly to this email to respond to the client.
 ```
 
-### Template Variables:
-Make sure these variables are included in your template:
-- `{{to_email}}` - Recipient email (alahiji@gmail.com)
-- `{{from_name}}` - Client's name
-- `{{from_email}}` - Client's email
-- `{{company}}` - Client's company
-- `{{industry}}` - Client's industry
-- `{{interest}}` - What they're interested in
-- `{{message}}` - Additional message from client
-- `{{reply_to}}` - Reply-to address (client's email)
+Save it and copy the **Template ID** (e.g. `template_xyz789`).
 
-4. In the "To email" field, enter: `{{to_email}}`
-5. In the "Reply to" field, enter: `{{reply_to}}`
-6. Click "Save" and copy the **Template ID** (e.g., `template_xyz789`)
+### Variables the site sends
 
-## Step 4: Get Your Public Key
+| Variable | Content |
+|---|---|
+| `to_email` | Your address from `config.js` |
+| `from_name`, `from_email`, `reply_to` | Visitor's name and email |
+| `company` | Company (may be empty) |
+| `interest` / `topic` | Chosen discussion topic |
+| `notes` | Free-text notes |
+| `message` | Everything above in one plain-text block |
+| `slot_owner_time` | Requested time in your time zone, e.g. `Mon, Sep 28, 2026, 9:00 AM CDT` |
+| `slot_visitor_time`, `visitor_timezone` | Same instant as the visitor saw it |
+| `slot_start_utc`, `slot_end_utc` | ISO timestamps; paste `slot_start_utc` into `bookedSlots` to hide the slot |
+| `duration_minutes` | Meeting length |
 
-1. Go to [Account Settings](https://dashboard.emailjs.com/admin/account)
-2. Find your **Public Key** (it looks like a random string, e.g., `aBcDeFgHiJkLmNoPqR`)
-3. Copy this key
+## 3. Get your public key
 
-## Step 5: Update Your Website Code
+*Account* → *General* → copy the **Public Key**.
 
-Open `script.js` and replace the placeholder values with your actual EmailJS credentials:
+## 4. Configure the site
 
-1. Replace `YOUR_PUBLIC_KEY` with your actual Public Key (line 51)
-2. Replace `YOUR_SERVICE_ID` with your Service ID (line 86)
-3. Replace `YOUR_TEMPLATE_ID` with your Template ID (line 86)
+Open `config.js` and fill in the `requests` block:
 
-### Example:
-```javascript
-// Before:
-emailjs.init('YOUR_PUBLIC_KEY');
-
-// After:
-emailjs.init('aBcDeFgHiJkLmNoPqR');
-
-// Before:
-const response = await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-
-// After:
-const response = await emailjs.send('service_abc123', 'template_xyz789', {
+```js
+requests: {
+  provider: "emailjs",
+  formspreeEndpoint: "",
+  emailjs: {
+    publicKey: "aBcDeFgHiJkLmNoPqR",
+    serviceId: "service_abc123",
+    templateId: "template_xyz789"
+  }
+}
 ```
 
-## Step 6: Test Your Form
+The EmailJS script is only loaded when a visitor submits the form, and only if
+all three values are present. If any is missing the site silently falls back
+to the `mailto` flow, so a half-finished setup never breaks the page.
 
-1. Open your website in a browser
-2. Fill out the consultation form
-3. Submit the form
-4. Check your email at alahiji@gmail.com for the consultation request
+## 5. Test
 
-## Troubleshooting
+Open the site, pick a slot, submit a request, and check your inbox (and spam
+folder). The browser console shows any EmailJS error.
 
-### Emails not being received?
-- Check your spam/junk folder
-- Verify all three IDs (Public Key, Service ID, Template ID) are correct
-- Check the browser console for error messages
-- Make sure you've verified your EmailJS account
+## Notes
 
-### Rate Limits
-- Free EmailJS accounts have a limit of 200 emails per month
-- If you need more, consider upgrading to a paid plan
-
-### Email Template Not Working?
-- Make sure all template variables match exactly (case-sensitive)
-- Verify the "To email" field is set to `{{to_email}}`
-- Check that the "Reply to" field is set to `{{reply_to}}`
-
-## Alternative: Using a Different Email Service
-
-If you prefer not to use Gmail, EmailJS supports other services:
-- Outlook/Office 365
-- Yahoo
-- Custom SMTP
-- And many more
-
-Simply choose a different service in Step 2.
-
-## Security Note
-
-Your EmailJS Public Key is safe to expose in client-side code. However, never expose your Private Key if you use one.
-
----
-
-For more help, visit the [EmailJS Documentation](https://www.emailjs.com/docs/)
+- Free tier: 200 emails per month.
+- The public key is safe to expose in client-side code. Never put a private
+  key in `config.js`.
+- Restrict the key to `luigiai.dev` in the EmailJS dashboard (*Account* →
+  *Security*) to stop other sites from using your quota.

@@ -270,6 +270,31 @@
     }
 
     /* ---------------------------------------------------------------------
+       "Add to calendar" links (URL-based, so they work on iPhone too)
+       --------------------------------------------------------------------- */
+    function calendarLinks(opts) {
+        var q = function (o) {
+            return Object.keys(o).map(function (k) { return k + '=' + encodeURIComponent(o[k]); }).join('&');
+        };
+        var startIso = opts.start.toISOString();
+        var endIso = opts.end.toISOString();
+        var outlook = q({
+            path: '/calendar/action/compose', rru: 'addevent',
+            subject: opts.summary, startdt: startIso, enddt: endIso,
+            body: opts.description || '', location: opts.location || ''
+        });
+        return {
+            google: 'https://calendar.google.com/calendar/render?' + q({
+                action: 'TEMPLATE', text: opts.summary,
+                dates: icsDate(opts.start) + '/' + icsDate(opts.end),
+                details: opts.description || '', location: opts.location || ''
+            }),
+            outlook: 'https://outlook.live.com/calendar/0/deeplink/compose?' + outlook,
+            office365: 'https://outlook.office.com/calendar/0/deeplink/compose?' + outlook
+        };
+    }
+
+    /* ---------------------------------------------------------------------
        Public API (for tests and other scripts)
        --------------------------------------------------------------------- */
     var api = {
@@ -281,6 +306,7 @@
         addDays: addDays,
         weekdayOf: weekdayOf,
         buildIcs: buildIcs,
+        calendarLinks: calendarLinks,
         fmtTime: fmtTime,
         fmtDayShort: fmtDayShort,
         fmtFull: fmtFull,
@@ -853,7 +879,7 @@
             ? 'Your email app should have opened with everything filled in. Hit send and we\'ll confirm your time within one business day.'
             : 'Thanks, ' + payload.name.split(' ')[0] + '. We\'ll confirm your time by email within one business day and send a video link.';
 
-        var icsBtn = el('button', { type: 'button', class: 'btn btn-soft', text: 'Add a hold to my calendar', onclick: function () { downloadIcs(s); } });
+        var calendar = renderCalendarOptions(s);
         var copyBtn = el('button', { type: 'button', class: 'btn btn-ghost', text: 'Copy request details', onclick: function () {
             copyText(detailsText).then(function () { copyBtn.textContent = 'Copied ✓'; });
         } });
@@ -871,7 +897,8 @@
                 fmtFull(s.start, state.visitorTz),
                 el('small', { text: LABEL + ' · ' + DURATION + ' min · ' + (SCHED.location || 'Video call') })
             ]),
-            el('div', { class: 'success-actions' }, [icsBtn, provider === 'mailto' ? copyBtn : null, againBtn]),
+            calendar,
+            el('div', { class: 'success-actions' }, [provider === 'mailto' ? copyBtn : null, againBtn]),
             provider === 'mailto'
                 ? el('details', { class: 'success-details' }, [
                     el('summary', { text: 'Email app didn\'t open? Send these details to ' + CONTACT }),
@@ -893,13 +920,54 @@
         });
     }
 
-    function downloadIcs(slot) {
-        var ics = buildIcs({
+    function isIOS() {
+        var ua = navigator.userAgent || '';
+        return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    function eventDetails(slot) {
+        return {
             start: slot.start, end: slot.end, tentative: true,
             summary: 'Luigi AI — ' + LABEL + ' (awaiting confirmation)',
             description: 'Requested via ' + (CFG.siteUrl || 'luigiai.dev') + '. Luigi AI will confirm by email and send a video link.',
             location: SCHED.location || 'Video call'
-        });
+        };
+    }
+
+    /**
+     * Google / Outlook / Office 365 open by URL on every device. Apple Calendar
+     * has no URL scheme, so it gets an .ics file; on iPhone Safari saves that
+     * to Files rather than opening Calendar, so we say where to find it.
+     */
+    function renderCalendarOptions(slot) {
+        var ev = eventDetails(slot);
+        var links = calendarLinks(ev);
+        var hint = el('p', { class: 'cal-hint', hidden: true });
+        var link = function (label, href) {
+            return el('a', { class: 'btn btn-soft btn-sm', href: href, target: '_blank', rel: 'noopener', text: label });
+        };
+        var apple = el('button', { type: 'button', class: 'btn btn-soft btn-sm', text: 'Apple Calendar (.ics)', onclick: function () {
+            downloadIcs(ev);
+            hint.textContent = isIOS()
+                ? 'Saved to Files › Downloads. Open it there and tap "Add All" to put the hold in your Calendar.'
+                : 'Open the downloaded .ics file to add the hold to your calendar.';
+            hint.hidden = false;
+        } });
+        return el('div', { class: 'cal-options' }, [
+            el('p', { class: 'cal-label', text: 'Hold this time in your calendar' }),
+            el('div', { class: 'cal-buttons' }, [
+                link('Google Calendar', links.google),
+                link('Outlook.com', links.outlook),
+                link('Office 365', links.office365),
+                apple
+            ]),
+            hint,
+            el('p', { class: 'cal-note', text: 'We\'ll send a proper invite with the video link once we confirm.' })
+        ]);
+    }
+
+    function downloadIcs(ev) {
+        var ics = buildIcs(ev);
         var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
         var url = URL.createObjectURL(blob);
         var a = el('a', { href: url, download: 'luigi-ai-consultation.ics' });

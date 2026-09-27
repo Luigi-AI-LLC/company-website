@@ -861,7 +861,30 @@ button { cursor: pointer; }
     font-weight: 600;
 }
 .success-slot small { display: block; font-weight: 400; color: var(--ink-3); }
-.success-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: .75rem; }
+.success-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: .25rem; }
+.cal-options {
+    width: 100%;
+    max-width: 560px;
+    margin-top: .75rem;
+    padding: 1rem 1.1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    display: grid;
+    gap: .7rem;
+}
+.cal-label { font-size: var(--fs-sm); font-weight: 600; }
+.cal-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+.cal-hint[hidden] { display: none; }
+.cal-hint {
+    padding: .6rem .8rem;
+    border-radius: var(--radius-sm);
+    background: var(--brand-50);
+    color: var(--brand-700);
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+}
+.cal-note { font-size: var(--fs-xs); color: var(--ink-3); }
 .success-details {
     width: 100%;
     max-width: 560px;

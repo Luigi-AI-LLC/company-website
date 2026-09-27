@@ -164,6 +164,18 @@ test('global bookedSlots hide a slot for every host', () => {
     assert.ok(!s2.some(s => s.start.toISOString() === '2026-10-03T14:00:00.000Z'));
 });
 
+console.log('calendar links');
+test('calendarLinks builds Google and Outlook URLs with UTC times', () => {
+    const l = S.calendarLinks({ start: new Date('2026-10-03T14:00:00Z'), end: new Date('2026-10-03T14:30:00Z'), summary: 'Luigi AI — call', description: 'Video call', location: 'Online' });
+    assert.ok(l.google.startsWith('https://calendar.google.com/calendar/render?action=TEMPLATE'));
+    assert.ok(l.google.includes('dates=20261003T140000Z%2F20261003T143000Z'));
+    assert.ok(l.google.includes('text=Luigi%20AI%20%E2%80%94%20call'));
+    assert.ok(l.outlook.startsWith('https://outlook.live.com/calendar/0/deeplink/compose?'));
+    assert.ok(l.outlook.includes('startdt=2026-10-03T14%3A00%3A00.000Z'));
+    assert.ok(l.office365.startsWith('https://outlook.office.com/calendar/0/deeplink/compose?'));
+    assert.ok(l.office365.includes('enddt=2026-10-03T14%3A30%3A00.000Z'));
+});
+
 console.log('ics');
 test('buildIcs emits a valid tentative VEVENT', () => {
     const ics = S.buildIcs({ start: new Date('2026-09-28T14:00:00Z'), end: new Date('2026-09-28T14:30:00Z'), summary: 'Call, with; commas', tentative: true });

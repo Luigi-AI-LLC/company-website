@@ -108,6 +108,62 @@ test('empty weekly config yields no slots', () => {
     assert.deepEqual(S.generateSlots({ ...base, weekly: {} }, now), []);
 });
 
+console.log('multi-host availability');
+const twoHosts = {
+    slotMinutes: 30, minNoticeHours: 0, horizonDays: 10,
+    hosts: [
+        { name: 'McAllen, TX', timezone: 'America/Chicago', weekly: {
+            mon: [['19:00', '22:00']], tue: [['19:00', '22:00']], wed: [['19:00', '22:00']], thu: [['19:00', '22:00']], fri: [['19:00', '22:00']],
+            sat: [['08:00', '22:00']], sun: [['08:00', '22:00']] } },
+        { name: 'Muscat, Oman', timezone: 'Asia/Muscat', weekly: {
+            mon: [['12:00', '16:00']], tue: [['12:00', '16:00']], wed: [['12:00', '16:00']], thu: [['12:00', '16:00']], fri: [['12:00', '16:00']],
+            sat: [['08:00', '22:00']], sun: [['08:00', '22:00']] } }
+    ]
+};
+const fri = new Date('2026-10-02T12:00:00Z');
+const two = S.generateSlots(twoHosts, fri);
+const at = iso => two.find(s => s.start.toISOString() === iso);
+
+test('hostsOf falls back to a single host from flat config', () => {
+    const h = S.hostsOf(base);
+    assert.equal(h.length, 1);
+    assert.equal(h[0].timezone, 'America/Chicago');
+});
+test('weekday Muscat window 12–16 local = 08:00Z–12:00Z, Muscat only', () => {
+    assert.deepEqual(at('2026-10-05T08:00:00.000Z').hosts, ['Muscat, Oman']);
+    assert.deepEqual(at('2026-10-05T11:30:00.000Z').hosts, ['Muscat, Oman']);
+    assert.equal(at('2026-10-05T12:00:00.000Z'), undefined, 'window end is exclusive');
+    assert.equal(at('2026-10-05T07:30:00.000Z'), undefined, 'before window');
+});
+test('weekday McAllen window 19–22 CDT = 00:00Z–03:00Z next day, McAllen only', () => {
+    assert.deepEqual(at('2026-10-06T00:00:00.000Z').hosts, ['McAllen, TX']);
+    assert.deepEqual(at('2026-10-06T02:30:00.000Z').hosts, ['McAllen, TX']);
+    assert.equal(at('2026-10-06T03:00:00.000Z'), undefined);
+});
+test('weekend overlap lists both hosts', () => {
+    // Sat 2026-10-03 09:00 CDT = 14:00Z = 18:00 Muscat: both inside 08–22
+    assert.deepEqual(at('2026-10-03T14:00:00.000Z').hosts.sort(), ['McAllen, TX', 'Muscat, Oman']);
+});
+test('weekend edges: Muscat-only morning, McAllen-only late night', () => {
+    // Sat 08:00 Muscat = 04:00Z; McAllen is 23:00 Fri → outside 19–22
+    assert.deepEqual(at('2026-10-03T04:00:00.000Z').hosts, ['Muscat, Oman']);
+    // Sat 21:30 CDT = 02:30Z Sun; Muscat is 06:30 Sun → outside 08–22
+    assert.deepEqual(at('2026-10-04T02:30:00.000Z').hosts, ['McAllen, TX']);
+});
+test('no slots when nobody is available', () => {
+    // Mon 2026-10-05 04:00Z = Sun 23:00 CDT (outside) and Mon 08:00 Muscat (weekday window is 12–16)
+    assert.equal(at('2026-10-05T04:00:00.000Z'), undefined);
+});
+test('slots are unique by start time and sorted', () => {
+    const keys = two.map(s => s.start.getTime());
+    assert.equal(new Set(keys).size, keys.length);
+    for (let i = 1; i < keys.length; i++) assert.ok(keys[i] > keys[i - 1]);
+});
+test('global bookedSlots hide a slot for every host', () => {
+    const s2 = S.generateSlots({ ...twoHosts, bookedSlots: ['2026-10-03T14:00:00Z'] }, fri);
+    assert.ok(!s2.some(s => s.start.toISOString() === '2026-10-03T14:00:00.000Z'));
+});
+
 console.log('ics');
 test('buildIcs emits a valid tentative VEVENT', () => {
     const ics = S.buildIcs({ start: new Date('2026-09-28T14:00:00Z'), end: new Date('2026-09-28T14:30:00Z'), summary: 'Call, with; commas', tentative: true });

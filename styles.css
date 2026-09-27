@@ -737,6 +737,15 @@ button { cursor: pointer; }
 .times-head h3 { font-size: 1rem; }
 .times-head span { font-size: var(--fs-xs); color: var(--ink-3); }
 
+.time-groups { display: grid; gap: 1.25rem; }
+.time-group-label {
+    margin-bottom: .6rem;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
 .time-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));

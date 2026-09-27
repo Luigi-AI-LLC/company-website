@@ -72,10 +72,11 @@ a calendar invite.
 
 ### Your workflow when a request arrives
 
-1. Open the email. It contains the requested time in **your** time zone, in
-   the visitor's time zone, and a UTC "Slot ID".
-2. Check your calendar. If you're free, create a Google Calendar event with a
-   Meet link, invite the visitor's email, and reply "confirmed".
+1. Open the email. It contains the requested time in each host's time zone
+   (marked available or outside hours), in the visitor's time zone, and a
+   UTC "Slot ID".
+2. Whoever is marked available takes the call: create a calendar event with
+   a video link, invite the visitor's email, and reply "confirmed".
 3. (Optional) Paste the Slot ID into `bookedSlots` in `config.js` so the slot
    disappears for other visitors:
 
@@ -88,26 +89,40 @@ a calendar invite.
 
 ### Configure your availability
 
-All in `config.js` → `availability`:
+All in `config.js` → `availability`. Each **host** has their own time zone and
+weekly hours written in that host's local time; visitors see the union of
+everyone's availability and each request email lists which host(s) are free
+for the chosen slot.
 
 ```js
 availability: {
-  timezone: "America/Chicago",     // IANA zone your hours are written in
   slotMinutes: 30,                 // length of each bookable slot
   minNoticeHours: 24,              // hide slots sooner than this
   horizonDays: 21,                 // how far ahead visitors can book
-  weekly: {                        // 24h windows; omit a day to close it
-    mon: [["09:00", "12:00"], ["13:00", "17:00"]],
-    ...
-    fri: [["09:00", "12:00"], ["13:00", "15:00"]]
-  },
-  blackoutDates: ["2026-11-26"],   // whole days off (YYYY-MM-DD)
-  bookedSlots: []                  // individual taken slots (ISO UTC)
+  hosts: [
+    {
+      name: "McAllen, TX",
+      timezone: "America/Chicago",
+      weekly: {                    // 24h windows; omit a day to close it
+        mon: [["19:00", "22:00"]], ... fri: [["19:00", "22:00"]],
+        sat: [["08:00", "22:00"]], sun: [["08:00", "22:00"]]
+      },
+      blackoutDates: ["2026-11-26"]  // whole days off (YYYY-MM-DD, this host's zone)
+    },
+    {
+      name: "Muscat, Oman",
+      timezone: "Asia/Muscat",
+      weekly: { mon: [["12:00", "16:00"]], ..., sat: [["08:00", "22:00"]], sun: [["08:00", "22:00"]] },
+      blackoutDates: []
+    }
+  ],
+  bookedSlots: []                  // taken slots (ISO UTC), hidden for everyone
 }
 ```
 
-Daylight-saving changes are handled automatically; tests cover the November
-switch.
+A single-host setup can still use the flat form (`timezone`, `weekly`,
+`blackoutDates` directly under `availability`). Daylight-saving changes are
+handled per host; tests cover the November switch.
 
 ### Choose how requests reach you
 
@@ -139,7 +154,9 @@ switch.
    field that silently drops bots.
 
 The submission includes: `name`, `email`, `company`, `topic`, `notes`,
-`slot_owner_time`, `slot_visitor_time`, `slot_start_utc`, `slot_end_utc`,
+`slot_owner_time` (first available host's local time), `slot_host_times` (the
+slot in every host's zone, marked available / outside hours),
+`hosts_available`, `slot_visitor_time`, `slot_start_utc`, `slot_end_utc`,
 `visitor_timezone`, `duration_minutes`, plus a `_subject` line like
 *"Consultation request: Jane Doe — Mon, Sep 28, 2026, 9:00 AM CDT"* and
 `_replyto` so you can hit Reply.
@@ -191,7 +208,8 @@ call only if you need custom booking logic a hosted tool can't express
 | `scheduler.mode` | `"builtin"` or `"embed"` |
 | `scheduler.embedUrl` | Public booking link for embed mode |
 | `scheduler.meetingLabel` / `durationMinutes` / `location` | Copy shown in the hero card, summary and confirmation |
-| `availability.*` | Rules for the built-in picker (see above) |
+| `availability.hosts[]` | One entry per person: name, time zone, weekly hours, days off |
+| `availability.*` | Slot length, notice period, horizon, booked slots |
 | `requests.provider` | `"mailto"`, `"formspree"` or `"emailjs"`; falls back to mailto if the chosen provider isn't configured |
 
 Run `node tests/scheduler.test.js` after editing availability logic.

@@ -29,7 +29,10 @@ Company:  {{company}}
 Topic:    {{interest}}
 
 Requested time
-  Your time zone:    {{slot_owner_time}}
+  Primary host:      {{slot_owner_time}}
+  All hosts:
+{{slot_host_times}}
+  Available:         {{hosts_available}}
   Visitor time zone: {{slot_visitor_time}} ({{visitor_timezone}})
   Duration:          {{duration_minutes}} minutes
   Slot ID (UTC):     {{slot_start_utc}}
@@ -54,7 +57,9 @@ Save it and copy the **Template ID** (e.g. `template_xyz789`).
 | `interest` / `topic` | Chosen discussion topic |
 | `notes` | Free-text notes |
 | `message` | Everything above in one plain-text block |
-| `slot_owner_time` | Requested time in your time zone, e.g. `Mon, Sep 28, 2026, 9:00 AM CDT` |
+| `slot_owner_time` | Requested time for the first available host, e.g. `Sat, Oct 3, 2026, 9:00 AM CDT (McAllen, TX)` |
+| `slot_host_times` | The slot in every host's time zone, one per line, marked available / outside hours |
+| `hosts_available` | Comma-separated names of the hosts free for this slot |
 | `slot_visitor_time`, `visitor_timezone` | Same instant as the visitor saw it |
 | `slot_start_utc`, `slot_end_utc` | ISO timestamps; paste `slot_start_utc` into `bookedSlots` to hide the slot |
 | `duration_minutes` | Meeting length |

@@ -37,8 +37,9 @@ static/             Logo
 
 ## Booking flow in one paragraph
 
-`config.js` describes your weekly hours, time zone, notice period and any
-booked or blacked-out dates. `scheduler.js` turns that into bookable slots,
+`config.js` lists each host's time zone and weekly hours (currently McAllen,
+TX and Muscat, Oman), plus notice period, booked slots and days off.
+`scheduler.js` merges everyone's availability into bookable slots,
 displays them in the visitor's local time, and delivers the chosen slot plus
 their details to you by **mailto** (zero setup, live now), **Formspree** or
 **EmailJS**. You reply with a calendar invite. When you're ready for real-time
@@ -48,7 +49,7 @@ and paste a Cal.com / Calendly / Google Calendar appointment link.
 
 ## Editing
 
-- **Contact email, hours, time zone, providers** → `config.js`
+- **Contact email, each host's hours and time zone, providers** → `config.js`
 - **Copy** → `index.html` (sections are labelled with comments)
 - **Colours, spacing, type** → the `:root` tokens at the top of `styles.css`
 

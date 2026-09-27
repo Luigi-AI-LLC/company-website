@@ -115,50 +115,75 @@
     /* ---------------------------------------------------------------------
        Slot generation
        --------------------------------------------------------------------- */
+    /** Normalise config into a list of hosts (a single-host config still works). */
+    function hostsOf(avail) {
+        var list = (Array.isArray(avail.hosts) && avail.hosts.length) ? avail.hosts : [{
+            name: avail.name || 'Luigi AI',
+            timezone: avail.timezone,
+            weekly: avail.weekly,
+            blackoutDates: avail.blackoutDates
+        }];
+        return list.map(function (h, i) {
+            return {
+                name: h.name || ('Host ' + (i + 1)),
+                timezone: isValidTimeZone(h.timezone || '') ? h.timezone : 'UTC',
+                weekly: h.weekly || {},
+                blackoutDates: h.blackoutDates || []
+            };
+        });
+    }
+
     /**
+     * Union of every host's availability, each evaluated in that host's own
+     * time zone, minus globally booked slots.
+     *
      * @param {object} avail  config.availability
      * @param {Date}   now    reference instant (defaults to new Date())
-     * @returns {Array<{start: Date, end: Date}>} sorted, bookable slots
+     * @returns {Array<{start: Date, end: Date, hosts: string[]}>} sorted slots
      */
     function generateSlots(avail, now) {
         now = now || new Date();
-        var tz = avail.timezone || 'UTC';
-        var slotMs = (avail.slotMinutes || 30) * MS_MIN;
+        var slotMin = avail.slotMinutes || 30;
+        var slotMs = slotMin * MS_MIN;
         var earliest = now.getTime() + (avail.minNoticeHours || 0) * MS_HOUR;
         var horizon = avail.horizonDays || 21;
-        var weekly = avail.weekly || {};
-        var blackout = {};
-        (avail.blackoutDates || []).forEach(function (d) { blackout[d] = true; });
+        var latest = now.getTime() + horizon * MS_DAY;
         var booked = {};
         (avail.bookedSlots || []).forEach(function (iso) {
             var t = Date.parse(iso);
             if (!isNaN(t)) booked[t] = true;
         });
 
-        var today = ymdInZone(now, tz);
-        var slots = [];
+        var byStart = {};
+        hostsOf(avail).forEach(function (host) {
+            var tz = host.timezone;
+            var blackout = {};
+            host.blackoutDates.forEach(function (d) { blackout[d] = true; });
+            var today = ymdInZone(now, tz);
 
-        for (var i = 0; i <= horizon; i++) {
-            var ymd = addDays(today, i);
-            if (blackout[ymd]) continue;
-            var ranges = weekly[weekdayOf(ymd)];
-            if (!ranges || !ranges.length) continue;
-            var p = ymdToParts(ymd);
+            for (var i = 0; i <= horizon; i++) {
+                var ymd = addDays(today, i);
+                if (blackout[ymd]) continue;
+                var ranges = host.weekly[weekdayOf(ymd)];
+                if (!ranges || !ranges.length) continue;
+                var p = ymdToParts(ymd);
 
-            ranges.forEach(function (range) {
-                var from = parseHHMM(range[0]);
-                var to = parseHHMM(range[1]);
-                for (var t = from; t + (slotMs / MS_MIN) <= to; t += slotMs / MS_MIN) {
-                    var start = zonedTimeToUtc(p.y, p.m, p.d, Math.floor(t / 60), t % 60, tz);
-                    var startTs = start.getTime();
-                    if (startTs < earliest) continue;
-                    if (startTs > now.getTime() + horizon * MS_DAY) continue;
-                    if (booked[startTs]) continue;
-                    slots.push({ start: start, end: new Date(startTs + slotMs) });
-                }
-            });
-        }
+                ranges.forEach(function (range) {
+                    var from = parseHHMM(range[0]);
+                    var to = parseHHMM(range[1]);
+                    for (var t = from; t + slotMin <= to; t += slotMin) {
+                        var start = zonedTimeToUtc(p.y, p.m, p.d, Math.floor(t / 60), t % 60, tz);
+                        var ts = start.getTime();
+                        if (ts < earliest || ts > latest || booked[ts]) continue;
+                        var slot = byStart[ts];
+                        if (!slot) slot = byStart[ts] = { start: start, end: new Date(ts + slotMs), hosts: [] };
+                        if (slot.hosts.indexOf(host.name) === -1) slot.hosts.push(host.name);
+                    }
+                });
+            }
+        });
 
+        var slots = Object.keys(byStart).map(function (k) { return byStart[k]; });
         slots.sort(function (a, b) { return a.start - b.start; });
         return slots;
     }
@@ -249,6 +274,7 @@
        --------------------------------------------------------------------- */
     var api = {
         generateSlots: generateSlots,
+        hostsOf: hostsOf,
         zonedTimeToUtc: zonedTimeToUtc,
         tzOffsetMs: tzOffsetMs,
         ymdInZone: ymdInZone,
@@ -302,7 +328,7 @@
     var AVAIL = CFG.availability || {};
     var REQ = CFG.requests || {};
     var CONTACT = CFG.contactEmail || '';
-    var OWNER_TZ = isValidTimeZone(AVAIL.timezone || '') ? AVAIL.timezone : 'UTC';
+    var HOSTS = hostsOf(AVAIL);
     var DURATION = SCHED.durationMinutes || AVAIL.slotMinutes || 30;
     var LABEL = SCHED.meetingLabel || 'Consultation';
 
@@ -391,7 +417,7 @@
         ui.tzSelect = el('select', { id: 'tzSelect', 'aria-label': 'Time zone', onchange: onTzChange });
         var tzList = COMMON_TZ.slice();
         if (tzList.indexOf(state.visitorTz) === -1) tzList.unshift(state.visitorTz);
-        if (tzList.indexOf(OWNER_TZ) === -1) tzList.push(OWNER_TZ);
+        HOSTS.forEach(function (h) { if (tzList.indexOf(h.timezone) === -1) tzList.push(h.timezone); });
         tzList.forEach(function (tz) {
             ui.tzSelect.appendChild(el('option', { value: tz, text: tzLabel(tz), selected: tz === state.visitorTz }));
         });
@@ -401,7 +427,7 @@
         ui.next = el('button', { type: 'button', class: 'strip-nav', 'aria-label': 'Later dates', html: ICON_CHEVRON_R, onclick: function () { scrollStrip(1); } });
         ui.timesTitle = el('h3', { text: 'Available times' });
         ui.timesCount = el('span');
-        ui.timeGrid = el('div', { class: 'time-grid', role: 'group', 'aria-label': 'Available times' });
+        ui.timeGrid = el('div', { class: 'time-groups' });
 
         var left = el('div', { class: 'booking-left' }, [
             el('div', { class: 'booking-toolbar' }, [
@@ -548,15 +574,42 @@
         }
         ui.timesTitle.textContent = fmtDayShort(slots[0].start, state.visitorTz);
         ui.timesCount.textContent = slots.length + ' open · ' + DURATION + ' min each';
-        slots.forEach(function (s) {
-            var isSel = state.selectedSlot && state.selectedSlot.start.getTime() === s.start.getTime();
-            ui.timeGrid.appendChild(el('button', {
-                type: 'button', class: 'time-slot' + (isSel ? ' is-selected' : ''),
-                'aria-pressed': isSel ? 'true' : 'false',
-                text: fmtTime(s.start, state.visitorTz),
-                onclick: function () { selectSlot(s, false); }
-            }));
+
+        /* Long days are split into Morning / Afternoon / Evening for scanning. */
+        var groups = slots.length > 12 ? groupByPeriod(slots) : [{ label: null, slots: slots }];
+        groups.forEach(function (g) {
+            var grid = el('div', { class: 'time-grid', role: 'group', 'aria-label': g.label || 'Available times' });
+            g.slots.forEach(function (s) { grid.appendChild(timeButton(s)); });
+            if (g.label) {
+                ui.timeGrid.appendChild(el('div', { class: 'time-group' }, [
+                    el('h4', { class: 'time-group-label', text: g.label + ' · ' + g.slots.length }),
+                    grid
+                ]));
+            } else {
+                ui.timeGrid.appendChild(grid);
+            }
         });
+    }
+
+    function timeButton(s) {
+        var isSel = state.selectedSlot && state.selectedSlot.start.getTime() === s.start.getTime();
+        return el('button', {
+            type: 'button', class: 'time-slot' + (isSel ? ' is-selected' : ''),
+            'aria-pressed': isSel ? 'true' : 'false',
+            text: fmtTime(s.start, state.visitorTz),
+            onclick: function () { selectSlot(s, false); }
+        });
+    }
+
+    function groupByPeriod(slots) {
+        var order = ['Morning', 'Afternoon', 'Evening'];
+        var buckets = { Morning: [], Afternoon: [], Evening: [] };
+        slots.forEach(function (s) {
+            var h = partsInZone(s.start, state.visitorTz).hour;
+            buckets[h < 12 ? 'Morning' : h < 17 ? 'Afternoon' : 'Evening'].push(s);
+        });
+        return order.filter(function (k) { return buckets[k].length; })
+            .map(function (k) { return { label: k, slots: buckets[k] }; });
     }
 
     function renderSummary() {
@@ -568,8 +621,8 @@
         }
         var s = state.selectedSlot;
         ui.slotValue.appendChild(document.createTextNode(fmtFull(s.start, state.visitorTz)));
-        if (state.visitorTz !== OWNER_TZ) {
-            ui.slotValue.appendChild(el('span', { class: 'slot-secondary', text: fmtFull(s.start, OWNER_TZ) + ' for Luigi AI' }));
+        if (HOSTS.length === 1 && state.visitorTz !== HOSTS[0].timezone) {
+            ui.slotValue.appendChild(el('span', { class: 'slot-secondary', text: fmtFull(s.start, HOSTS[0].timezone) + ' for Luigi AI' }));
         }
     }
 
@@ -644,12 +697,24 @@
     function buildPayload(data) {
         var s = state.selectedSlot;
         var visitorWhen = fmtFull(s.start, state.visitorTz);
-        var ownerWhen = fmtFull(s.start, OWNER_TZ);
+        var available = s.hosts || [];
+        var primary = HOSTS.filter(function (h) { return available.indexOf(h.name) !== -1; })[0] || HOSTS[0];
+        var multi = HOSTS.length > 1;
+        var ownerWhen = fmtFull(s.start, primary.timezone) + (multi ? ' (' + primary.name + ')' : '');
+        var hostLines = HOSTS.map(function (h) {
+            var line = h.name + ': ' + fmtFull(s.start, h.timezone);
+            if (multi) line += available.indexOf(h.name) !== -1 ? ' — available' : ' — outside hours';
+            return line;
+        });
+        var hostsAvailable = available.length ? available.join(', ') : primary.name;
         var message = [
-            'Requested time: ' + ownerWhen + ' (' + OWNER_TZ + ')',
+            'Requested time: ' + ownerWhen,
             'Visitor local time: ' + visitorWhen + ' (' + state.visitorTz + ')',
             'Duration: ' + DURATION + ' minutes',
             'Slot ID (UTC): ' + s.start.toISOString(),
+            '',
+            'Team availability for this slot:',
+            hostLines.map(function (l) { return '  ' + l; }).join('\n'),
             '',
             'Company: ' + (data.company || 'Not provided'),
             'Topic: ' + (data.topic || 'Not specified'),
@@ -666,6 +731,8 @@
             topic: data.topic,
             notes: data.notes,
             slot_owner_time: ownerWhen,
+            slot_host_times: hostLines.join('\n'),
+            hosts_available: hostsAvailable,
             slot_visitor_time: visitorWhen,
             slot_start_utc: s.start.toISOString(),
             slot_end_utc: s.end.toISOString(),
